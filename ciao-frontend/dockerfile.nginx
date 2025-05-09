@@ -1,0 +1,17 @@
+# Costruiamo un'immagine  in due step. Il primo step è chiamato builder (as builder)
+FROM node:18.16.1-alpine AS builder
+
+# Change directory so that our commands run inside this new directory
+WORKDIR /dist/src/app
+COPY . /dist/src/app
+RUN npm cache clean --force
+RUN npm install @angular/cli@16.1.4 -g
+RUN npm install
+RUN ng build
+
+#Il secondo step dell'immagine 
+FROM nginx
+EXPOSE 4201
+COPY ./nginx/nginx.config /etc/nginx/conf.n/nginx.config
+#Si copia il progetto nella cartella da cui nginx pesca i file html
+COPY --from=builder /dist/src/app/dist/ciao-frontend/browser /usr/share/nginx/html

@@ -33,4 +33,4 @@ FROM nginx:latest AS ngi
 COPY --from=builder /dist/src/app/dist/ciao-frontend/browser /usr/share/nginx/html
 
 # Expose related ports.
-EXPOSE 4201
+EXPOSE 80
